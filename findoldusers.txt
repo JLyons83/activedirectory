@@ -1,0 +1,8 @@
+#students, user enabled, last login 2 years ago and not in alumni
+Get-ADUser -filter 'enabled -eq $true' -SearchBase "OU=" -Properties * | Where-Object {($_.LastLogonDate -le $twoYearsAgo) -and ("CN=A" -notin $_.MemberOf )} | Select-Object samaccountname, lastlogondate, MemberOf | out-file "C:\users\oldstudents1.csv" -Append
+
+#staff, user enabled, last login 2 years ago 
+Get-ADUser -filter 'enabled -eq $true' -SearchBase "OU=" -Properties * | Where-Object {($_.LastLogonDate -le $twoYearsAgo) -and ("CN=Alumni_Group," -notin $_.MemberOf )} | Select-Object samaccountname, lastlogondate, MemberOf | export-csv "C:\users\oldstaff1.csv" -append
+
+#neither staff or students user enabled, last login 2 years ago
+Get-ADUser -filter 'enabled -eq $true' -Properties * | Where-Object {($_.distinguishedname -notlike '*OU=*') -and ($_.distinguishedname -notlike '*OU=staff*') -and ($_.LastLogonDate -le $twoYearsAgo) -and ("CN=" -notin $_.MemberOf )} | Select-Object samaccountname, lastlogondate, MemberOf | export-csv "C:\users\ajeremy\Documents\oldgeneralusers.csv" -append

@@ -1,0 +1,10 @@
+$number = Read-Host -Prompt "What is the mobile phone number you are looking for "
+$number = $number -replace '[^0-9]'
+Get-AdUser -Filter * -Properties MobilePhone, HomePhone, OfficePhone, DisplayName |`
+Select-Object DisplayName, `
+@{Name = "MobilePhone";Expression = {($_.MobilePhone -replace '[^0-9]')}},`
+@{Name = "OfficePhone";Expression = {($_.OfficePhone -replace '[^0-9]')}},`
+@{Name = "HomePhone";Expression = {($_.HomePhone -replace '[^0-9]')}}|`
+Where-Object {($_.MobilePhone -like ("*$number*")) `
+-or ($_.OfficePhone -like ("*$number*"))`
+-or ($_.HomePhone -like ("*$number*"))}

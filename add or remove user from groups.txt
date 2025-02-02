@@ -1,0 +1,22 @@
+$users = get-content C:\Users
+
+#checks if user is in group and removes user from group
+ $group = "proxy-level1"
+$members = Get-ADGroup $Group -Properties Member | Select-Object -ExpandProperty Member | Get-ADObject -Properties Name
+ForEach ($user in $users) {
+    If ($members -contains $user) {
+      Remove-ADGroupMember -Identity $group -Members $user -Confirm:$false
+ } Else {
+      Write-Host "$user not exists in the group"
+}} 
+
+
+#checks if user is in group and add user to group
+<#$group = "proxy-level5"
+$members = Get-ADGroup $Group -Properties Member | Select-Object -ExpandProperty Member | Get-ADObject -Properties Name
+ForEach ($user in $users) {
+    If ($members -contains $user) {
+     Write-Host "$user already exists in the group" 
+ } Else {
+    Add-ADGroupMember -Identity $group -Members $user -Confirm:$false  
+}} #>

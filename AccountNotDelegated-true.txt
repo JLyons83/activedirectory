@@ -1,0 +1,13 @@
+$groups = @("Domain Admins", "administrators" )  
+
+$members = foreach ($group in $groups) {
+    Get-ADGroupMember $group |
+    Get-ADUser -Properties AccountNotDelegated -ErrorAction SilentlyContinue |
+    Where-Object {
+        -not $_.AccountNotDelegated -and
+        $_.objectClass -eq "user" -and
+        $_.distinguishedname -notlike "*Service account*"
+    }
+}
+
+$members | set-aduser -AccountNotDelegated $true 

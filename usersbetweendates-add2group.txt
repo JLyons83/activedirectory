@@ -1,0 +1,5 @@
+$startDate = Get-Date "01/01/2022" -Format "dd/MM/yyyy HH:mm:ss"
+$endDate = Get-Date "01/01/2024" -Format "dd/MM/yyyy HH:mm:ss"
+
+Get-ADUser -Filter * -SearchBase "[ou=]" -Properties * | where-object {$_.created -gt $startDate -and $_.created -le $endDate} `
+ | Select-Object Samaccountname | ForEach-Object  {Add-ADGroupMember -Identity "azureappusers" -Members $_.samaccountname}

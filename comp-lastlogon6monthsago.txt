@@ -1,0 +1,5 @@
+ $a = Get-Date
+ $b = $a.AddDays(-180)
+#not including servers
+ get-adcomputer -filter {lastlogondate -le $b}  -properties Distinguishedname, lastlogondate | Where-Object {$_.distinguishedname -notlike "*servers*"} |
+ select name,lastlogondate, Distinguishedname | export-csv C:\Users.csv

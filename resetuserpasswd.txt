@@ -1,0 +1,19 @@
+$users = get-content C:\users\ajeremy\Documents\usersresetpasswd.txt
+
+Foreach($User in $users){
+#Randomly Chooses Password
+Add-Type -AssemblyName 'System.Web'
+$minLength = 20 ## characters
+$maxLength = 40 ## characters
+$length = Get-Random -Minimum $minLength -Maximum $maxLength
+$nonAlphaChars = 5
+$password = [System.Web.Security.Membership]::GeneratePassword($length, $nonAlphaChars)
+$secPw = ConvertTo-SecureString -String $password -AsPlainText -Force
+
+
+
+
+
+#Resets Password
+Set-ADAccountPassword -Identity $User -NewPassword $secPw -Reset 
+}
